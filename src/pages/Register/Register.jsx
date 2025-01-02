@@ -1,13 +1,32 @@
 import { Link } from "react-router-dom";
 import Navbar from "../Shared/Navbar/Navbar";
+import { useContext } from "react";
+import { AuthContext } from "../../providers/AuthProvider";
 
 const Register = () => {
+  const { createUser } = useContext(AuthContext);
+
   const handleRegister = (e) => {
     e.preventDefault();
 
     console.log(e.currentTarget);
     const form = new FormData(e.currentTarget);
-    console.log(form.get("email"));
+    const name = form.get("name");
+    const photo = form.get("photo");
+    const email = form.get("email");
+    const password = form.get("password");
+
+    console.log(name, photo, email, password);
+
+    // create user
+    createUser(email, password)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        console.log("user created successfully", user);
+      })
+      .catch((error) => {
+        console.error(error.code);
+      });
   };
 
   return (
@@ -43,7 +62,7 @@ const Register = () => {
                   type="text"
                   placeholder="Enter your photo URL"
                   className="input input-bordered"
-                  name="name"
+                  name="photo"
                   required
                 />
               </div>
